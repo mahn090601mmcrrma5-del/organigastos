@@ -1,0 +1,843 @@
+html
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Organigastos Pro - Neon Cyber Marine Edition</title>
+    
+    <!-- PWA & Mobile Meta Tags -->
+    <meta name="theme-color" content="#030712">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Control de Finanzas Personales, Gastos Hormiga y Capacidad de Ahorro con Tema Neon Cyber Marine">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        marine: {
+                            950: '#030712',
+                            900: '#0a0f1d',
+                            800: '#0d1629',
+                            700: '#13213d',
+                            600: '#1b2f56'
+                        },
+                        neon: {
+                            cyan: '#00f0ff',
+                            teal: '#00f5d4',
+                            magenta: '#ec4899',
+                            pink: '#f43f5e',
+                            green: '#10b981',
+                            amber: '#f59e0b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(0, 240, 255, 0.08) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(236, 72, 153, 0.08) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(13, 22, 41, 0.5) 0px, transparent 100%);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .glow-cyan {
+            box-shadow: 0 0 20px -3px rgba(0, 240, 255, 0.35);
+        }
+        .glow-magenta {
+            box-shadow: 0 0 20px -3px rgba(236, 72, 153, 0.35);
+        }
+        .glow-green {
+            box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.35);
+        }
+
+        .border-neon-cyan {
+            border-color: rgba(0, 240, 255, 0.4);
+        }
+        .border-neon-magenta {
+            border-color: rgba(236, 72, 153, 0.4);
+        }
+
+        .glass-panel {
+            background: rgba(13, 22, 41, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+        }
+
+        .glass-card {
+            background: rgba(19, 33, 61, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(3, 7, 18, 0.6);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 240, 255, 0.3);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 240, 255, 0.6);
+        }
+    </style>
+</head>
+<body class="h-full text-slate-100 antialiased selection:bg-neon-cyan selection:text-slate-950 flex flex-col">
+
+    <header class="border-b border-cyan-500/20 bg-marine-900/90 backdrop-blur-md sticky top-0 z-30 shadow-lg shadow-cyan-950/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="p-2.5 rounded-xl bg-cyan-950/80 border border-neon-cyan text-neon-cyan glow-cyan flex items-center justify-center">
+                    <i class="fa-solid fa-gem text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan via-neon-teal to-neon-magenta font-orbitron">
+                        ORGANIGASTOS <span class="text-xs px-2 py-0.5 rounded-md bg-cyan-950 text-neon-cyan border border-cyan-500/30">NEON CYBER</span>
+                    </h1>
+                    <p class="text-xs text-cyan-400/70">Control Financiero &amp; Fuga de Gastos Hormiga</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <button onclick="openModal('income')" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs sm:text-sm transition flex items-center space-x-1.5 shadow-lg shadow-emerald-950/50 active:scale-95">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>+ Ingreso</span>
+                </button>
+                <button onclick="openModal('expense')" class="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-400 hover:to-rose-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs sm:text-sm transition flex items-center space-x-1.5 shadow-lg shadow-pink-950/50 active:scale-95">
+                    <i class="fa-solid fa-circle-minus"></i>
+                    <span>+ Gasto</span>
+                </button>
+                <button onclick="confirmResetAll()" class="p-2 rounded-xl bg-marine-800 hover:bg-marine-700 text-slate-400 hover:text-neon-pink border border-slate-700 transition" title="Reiniciar datos a cero">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+        <!-- FINANCIAL OVERVIEW HERO DASHBOARD -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- TOTAL INCOME CARD -->
+            <div class="glass-panel p-5 rounded-2xl relative overflow-hidden border-emerald-500/30 group hover:border-emerald-400 transition">
+                <div class="absolute -right-4 -bottom-4 text-emerald-500/10 text-7xl group-hover:text-emerald-500/20 transition">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <p class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-trend-up"></i> Ingresos Totales
+                </p>
+                <h2 id="display-total-income" class="text-2xl sm:text-3xl font-black text-white font-orbitron">$0.00</h2>
+                <p id="income-subtitle" class="text-[11px] text-slate-400 mt-2">Suma de becas, sueldos y apoyos</p>
+            </div>
+
+            <!-- DISPONIBLE / CAPACIDAD DE GASTO HOY -->
+            <div class="glass-panel p-5 rounded-2xl relative overflow-hidden border-neon-cyan glow-cyan group">
+                <div class="absolute -right-4 -bottom-4 text-cyan-500/10 text-7xl group-hover:text-cyan-500/20 transition">
+                    <i class="fa-solid fa-sack-dollar"></i>
+                </div>
+                <p class="text-xs font-bold uppercase tracking-wider text-neon-cyan mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-bolt"></i> Disponible Gastable
+                </p>
+                <h2 id="display-available-cash" class="text-2xl sm:text-3xl font-black text-neon-cyan font-orbitron">$0.00</h2>
+                <p id="available-subtitle" class="text-[11px] text-cyan-300/80 mt-2">Capacidad real tras ahorro y gastos fijos</p>
+            </div>
+
+            <!-- GASTO HORMIGA TOTAL -->
+            <div class="glass-panel p-5 rounded-2xl relative overflow-hidden border-neon-magenta glow-magenta group">
+                <div class="absolute -right-4 -bottom-4 text-pink-500/10 text-7xl group-hover:text-pink-500/20 transition">
+                    <i class="fa-solid fa-bug"></i>
+                </div>
+                <p class="text-xs font-bold uppercase tracking-wider text-neon-magenta mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-cookie-bite"></i> Gastos Hormiga
+                </p>
+                <h2 id="display-hormiga-total" class="text-2xl sm:text-3xl font-black text-neon-magenta font-orbitron">$0.00</h2>
+                <p id="hormiga-subtitle" class="text-[11px] text-pink-300/80 mt-2">Antojitos, compras y pequeñas fugas</p>
+            </div>
+
+            <!-- AHORRO POTENCIAL -->
+            <div class="glass-panel p-5 rounded-2xl relative overflow-hidden border-teal-500/30 group hover:border-teal-400 transition">
+                <div class="absolute -right-4 -bottom-4 text-teal-500/10 text-7xl group-hover:text-teal-500/20 transition">
+                    <i class="fa-solid fa-piggy-bank"></i>
+                </div>
+                <p class="text-xs font-bold uppercase tracking-wider text-neon-teal mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-chart-line"></i> Ahorro Potencial
+                </p>
+                <h2 id="display-potential-savings" class="text-2xl sm:text-3xl font-black text-white font-orbitron">$0.00</h2>
+                <p id="savings-subtitle" class="text-[11px] text-teal-300/80 mt-2">Si eliminas tus Gastos Hormiga</p>
+            </div>
+
+        </div>
+
+        <!-- DYNAMIC GASTO HORMIGA THRESHOLD & BUDGET ALERT BANNER -->
+        <div id="hormiga-budget-panel" class="glass-panel p-5 rounded-2xl border-cyan-500/30 space-y-4 relative">
+            <div class="flex flex-wrap justify-between items-center gap-3">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 rounded-xl bg-pink-950/80 border border-pink-500/50 text-neon-magenta">
+                        <i class="fa-solid fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            Límite Dinámico para Gastos Hormiga
+                            <span id="hormiga-percent-badge" class="text-xs px-2 py-0.5 rounded-full bg-pink-950 text-neon-magenta border border-pink-500/30 font-orbitron">Max 8% de Ingresos</span>
+                        </h2>
+                        <p class="text-xs text-slate-400">Calculado automáticamente en tiempo real al ingresar tus ganancias</p>
+                    </div>
+                </div>
+
+                <!-- SELECTOR DE PORCENTAJE DE TOLERANCIA HORMIGA -->
+                <div class="flex items-center space-x-2 bg-marine-900 px-3 py-1.5 rounded-xl border border-slate-700">
+                    <label for="hormiga-ratio" class="text-xs font-semibold text-slate-300">Tolerancia Hormiga:</label>
+                    <select id="hormiga-ratio" onchange="recalculateLimits()" class="bg-marine-950 text-neon-cyan text-xs rounded-lg border border-cyan-500/30 px-2 py-1 font-bold focus:outline-none">
+                        <option value="0.05">Strict (5% máx)</option>
+                        <option value="0.08" selected>Recomendado (8% máx)</option>
+                        <option value="0.10">Flexible (10% máx)</option>
+                        <option value="0.15">Permisivo (15% máx)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- GAUGES & PROGRESS BARS -->
+            <div class="space-y-2">
+                <div class="flex justify-between items-center text-xs font-bold">
+                    <span id="hormiga-gauge-label" class="text-slate-300">Gastado en Hormiga: $0.00</span>
+                    <span id="hormiga-gauge-max" class="text-neon-cyan font-orbitron">Límite Permitido: $0.00</span>
+                </div>
+                <div class="w-full bg-marine-950 h-3.5 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                    <div id="hormiga-progress-bar" class="h-full rounded-full bg-gradient-to-r from-neon-teal via-neon-cyan to-neon-magenta transition-all duration-500 w-0"></div>
+                </div>
+            </div>
+
+            <!-- ALERT BANNER -->
+            <div id="hormiga-alert-box" class="p-3.5 rounded-xl border bg-marine-900/80 text-xs flex items-center justify-between gap-3 transition">
+                <div class="flex items-center space-x-2.5">
+                    <i id="alert-icon" class="fa-solid fa-circle-check text-neon-teal text-base"></i>
+                    <span id="alert-text" class="text-slate-300">Ingresa tus ingresos para activar el cálculo automático de tu presupuesto hormiga.</span>
+                </div>
+                <span id="alert-diff-badge" class="font-orbitron font-bold text-neon-teal text-xs whitespace-nowrap">OK</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- CAPACIDAD DE AHORRO Y CAPACIDAD DIARIA/SEMANAL -->
+            <div class="glass-panel p-5 rounded-2xl border-cyan-500/20 space-y-4 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-sm font-bold text-neon-cyan uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-compass"></i> Capacidad de Gasto Inteligente
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="glass-card p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+                            <div>
+                                <p class="text-xs text-slate-400">Presupuesto Diario Sugerido</p>
+                                <p id="calc-daily-cap" class="text-lg font-black text-white font-orbitron">$0.00 / día</p>
+                            </div>
+                            <span class="p-2 rounded-lg bg-cyan-950/60 text-neon-cyan border border-cyan-500/30 text-xs font-bold">7 días</span>
+                        </div>
+
+                        <div class="glass-card p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+                            <div>
+                                <p class="text-xs text-slate-400">Presupuesto Semanal Sugerido</p>
+                                <p id="calc-weekly-cap" class="text-lg font-black text-neon-teal font-orbitron">$0.00 / sem</p>
+                            </div>
+                            <span class="p-2 rounded-lg bg-teal-950/60 text-neon-teal border border-teal-500/30 text-xs font-bold">Semana</span>
+                        </div>
+
+                        <div class="glass-card p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+                            <div>
+                                <p class="text-xs text-slate-400">Gastos Necesarios Fijos</p>
+                                <p id="calc-fixed-expenses" class="text-lg font-black text-rose-400 font-orbitron">$0.00</p>
+                            </div>
+                            <span class="p-2 rounded-lg bg-rose-950/60 text-rose-400 border border-rose-500/30 text-xs font-bold">Fijos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-800/80">
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        💡 <strong class="text-neon-cyan">Tip Cyber Finanzas:</strong> Mantén tus Gastos Hormiga por debajo de la línea neón para liberar excedentes de dinero directamente hacia tu caja de ahorro.
+                    </p>
+                </div>
+            </div>
+
+            <!-- SAVINGS GOAL SECTION -->
+            <div class="glass-panel p-5 rounded-2xl border-magenta-500/20 space-y-4 lg:col-span-2 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-sm font-bold text-neon-magenta uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-bullseye"></i> Meta Personal de Ahorro
+                        </h3>
+                        <button onclick="openGoalModal()" class="text-xs text-neon-cyan hover:underline font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-pen-to-square"></i> Configurar Meta
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                        <div class="glass-card p-3 rounded-xl border border-slate-800">
+                            <p class="text-xs text-slate-400">Objetivo</p>
+                            <p id="goal-name-display" class="text-sm font-bold text-white truncate">Sin Meta Configurada</p>
+                        </div>
+                        <div class="glass-card p-3 rounded-xl border border-slate-800">
+                            <p class="text-xs text-slate-400">Monto Meta</p>
+                            <p id="goal-target-display" class="text-sm font-bold text-neon-cyan font-orbitron">$0.00</p>
+                        </div>
+                        <div class="glass-card p-3 rounded-xl border border-slate-800">
+                            <p class="text-xs text-slate-400">Ahorrado Actual</p>
+                            <p id="goal-saved-display" class="text-sm font-bold text-neon-teal font-orbitron">$0.00</p>
+                        </div>
+                    </div>
+
+                    <!-- GOAL PROGRESS -->
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-slate-400">Progreso hacia el Objetivo</span>
+                            <span id="goal-percentage-display" class="font-bold text-neon-magenta font-orbitron">0%</span>
+                        </div>
+                        <div class="w-full bg-marine-950 h-3 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                            <div id="goal-progress-bar" class="h-full rounded-full bg-gradient-to-r from-neon-magenta to-neon-pink transition-all duration-500 w-0"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="goal-time-projection" class="p-3 rounded-xl bg-marine-900/60 border border-slate-800 text-xs text-slate-300 flex items-center justify-between gap-2 mt-4">
+                    <span><i class="fa-solid fa-hourglass-half text-neon-magenta mr-1.5"></i> Proyección con tu ritmo de ahorro:</span>
+                    <span id="goal-time-text" class="font-bold text-white font-orbitron">-- semanas</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TRANSACTIONS REGISTER & HISTORY -->
+        <div class="glass-panel p-5 rounded-2xl border-cyan-500/20 space-y-4">
+            <div class="flex flex-wrap justify-between items-center gap-3 border-b border-slate-800 pb-3">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-neon-cyan"></i> Historial Transaccional
+                    </h2>
+                    <p class="text-xs text-slate-400">Todos tus ingresos, gastos normales y antojos hormiga registrados</p>
+                </div>
+
+                <!-- FILTERS -->
+                <div class="flex items-center space-x-2">
+                    <button onclick="setFilter('ALL')" id="filter-btn-ALL" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-neon-cyan text-slate-950">Todos</button>
+                    <button onclick="setFilter('INCOME')" id="filter-btn-INCOME" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-marine-800 text-slate-300 hover:text-white">Ingresos</button>
+                    <button onclick="setFilter('EXPENSE')" id="filter-btn-EXPENSE" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-marine-800 text-slate-300 hover:text-white">Gastos</button>
+                    <button onclick="setFilter('HORMIGA')" id="filter-btn-HORMIGA" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-marine-800 text-slate-300 hover:text-white">🐜 Hormiga</button>
+                </div>
+            </div>
+
+            <!-- TRANSACTION ITEMS CONTAINER -->
+            <div id="transactions-list" class="space-y-2.5 max-h-[420px] overflow-y-auto custom-scrollbar pr-1">
+                <!-- Injected dynamically by JavaScript -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL: ADD / EDIT TRANSACTION -->
+    <div id="transaction-modal" class="fixed inset-0 bg-marine-950/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="glass-panel rounded-2xl max-w-md w-full border-neon-cyan glow-cyan overflow-hidden shadow-2xl transform transition-all">
+            <div id="modal-header-bar" class="px-6 py-4 bg-gradient-to-r from-marine-900 to-marine-800 border-b border-slate-800 flex justify-between items-center">
+                <h3 id="modal-title" class="font-bold text-base text-white font-orbitron flex items-center gap-2">
+                    <i id="modal-title-icon" class="fa-solid fa-plus-circle text-neon-cyan"></i>
+                    <span>Registrar Transacción</span>
+                </h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="transaction-form" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="trans-id">
+                <input type="hidden" id="trans-type" value="INCOME">
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Monto ($ MXN)</label>
+                    <input type="number" step="0.01" min="0.01" id="trans-amount" required placeholder="0.00" class="w-full px-4 py-2.5 bg-marine-950 border border-slate-700 rounded-xl text-white font-orbitron text-lg focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Descripción o Concepto</label>
+                    <input type="text" id="trans-concept" required placeholder="Ej. Beca, Pasaje, Café, Antojo..." class="w-full px-4 py-2 bg-marine-950 border border-slate-700 rounded-xl text-slate-100 text-sm focus:border-neon-cyan focus:outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Categoría</label>
+                        <select id="trans-category" class="w-full px-3 py-2 bg-marine-950 border border-slate-700 rounded-xl text-slate-200 text-xs focus:border-neon-cyan focus:outline-none">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Fecha</label>
+                        <input type="date" id="trans-date" required class="w-full px-3 py-2 bg-marine-950 border border-slate-700 rounded-xl text-slate-200 text-xs focus:border-neon-cyan focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- HORMIGA CHECKBOX OPTION (ONLY FOR EXPENSES) -->
+                <div id="hormiga-toggle-container" class="p-3.5 rounded-xl bg-pink-950/40 border border-pink-500/30 flex items-center justify-between">
+                    <div class="flex items-center space-x-2.5">
+                        <i class="fa-solid fa-bug text-neon-magenta text-lg"></i>
+                        <div>
+                            <p class="text-xs font-bold text-white">¿Es Gasto Hormiga? 🐜</p>
+                            <p class="text-[10px] text-pink-300/80">Antojito, chatarra, propina o compra innecesaria</p>
+                        </div>
+                    </div>
+                    <input type="checkbox" id="trans-is-hormiga" class="h-5 w-5 rounded bg-marine-950 border-pink-500 text-neon-magenta focus:ring-neon-magenta cursor-pointer">
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl border border-slate-700 text-slate-300 text-xs font-bold hover:bg-marine-800 transition">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-teal text-slate-950 font-bold text-xs hover:opacity-90 transition shadow-lg shadow-cyan-950/50">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: CONFIGURE GOAL -->
+    <div id="goal-modal" class="fixed inset-0 bg-marine-950/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="glass-panel rounded-2xl max-w-md w-full border-neon-magenta glow-magenta overflow-hidden shadow-2xl transform transition-all">
+            <div class="px-6 py-4 bg-gradient-to-r from-marine-900 to-marine-800 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-base text-white font-orbitron flex items-center gap-2">
+                    <i class="fa-solid fa-bullseye text-neon-magenta"></i> Configurar Meta de Ahorro
+                </h3>
+                <button onclick="closeGoalModal()" class="text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="goal-form" onsubmit="handleGoalSubmit(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Nombre de la Meta</label>
+                    <input type="text" id="goal-name-input" required placeholder="Ej. Comprar Laptop, Fondo Emergencia, Viaje..." class="w-full px-4 py-2 bg-marine-950 border border-slate-700 rounded-xl text-slate-100 text-sm focus:border-neon-magenta focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Monto Meta ($ MXN)</label>
+                    <input type="number" step="0.01" min="1" id="goal-target-input" required placeholder="0.00" class="w-full px-4 py-2.5 bg-marine-950 border border-slate-700 rounded-xl text-white font-orbitron text-lg focus:border-neon-magenta focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Ahorro Inicial / Ya Guardado ($ MXN)</label>
+                    <input type="number" step="0.01" min="0" id="goal-saved-input" placeholder="0.00" class="w-full px-4 py-2 bg-marine-950 border border-slate-700 rounded-xl text-slate-100 text-sm focus:border-neon-magenta focus:outline-none">
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="closeGoalModal()" class="px-4 py-2 rounded-xl border border-slate-700 text-slate-300 text-xs font-bold hover:bg-marine-800 transition">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-gradient-to-r from-neon-magenta to-neon-pink text-white font-bold text-xs hover:opacity-90 transition shadow-lg shadow-pink-950/50">Guardar Meta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // APP STATE & LOCALSTORAGE PERSISTENCE
+        let transactions = [];
+        let currentFilter = 'ALL';
+        let savingsGoal = {
+            name: '',
+            target: 0,
+            saved: 0
+        };
+
+        const CATEGORIES = {
+            INCOME: ['Beca Benito Juárez', 'Sueldo / Trabajo', 'Apoyo Familiar', 'Venta Extra', 'Otro Ingreso'],
+            EXPENSE: ['Transporte / Pasaje', 'Comida / Escuela', 'Materiales / Utiles', 'Gastos Fijos', 'Servicios', 'Entretenimiento', 'Otro Gasto']
+        };
+
+        window.onload = function() {
+            loadFromStorage();
+            renderAll();
+        };
+
+        function loadFromStorage() {
+            const savedTrans = localStorage.getItem('organigastos_cyber_transactions');
+            const savedGoal = localStorage.getItem('organigastos_cyber_goal');
+
+            transactions = savedTrans ? JSON.parse(savedTrans) : [];
+            savingsGoal = savedGoal ? JSON.parse(savedGoal) : { name: '', target: 0, saved: 0 };
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('organigastos_cyber_transactions', JSON.stringify(transactions));
+            localStorage.setItem('organigastos_cyber_goal', JSON.stringify(savingsGoal));
+        }
+
+        function confirmResetAll() {
+            if (confirm('¿Deseas reiniciar todo tu sistema financiero a $0.00? Esta acción borrará todas las transacciones registradas.')) {
+                transactions = [];
+                savingsGoal = { name: '', target: 0, saved: 0 };
+                saveToStorage();
+                renderAll();
+            }
+        }
+
+        function renderAll() {
+            renderOverview();
+            recalculateLimits();
+            renderGoal();
+            renderTransactionsList();
+        }
+
+        function renderOverview() {
+            const totalIncome = transactions
+                .filter(t => t.type === 'INCOME')
+                .reduce((sum, t) => sum + t.amount, 0);
+
+            const totalExpense = transactions
+                .filter(t => t.type === 'EXPENSE')
+                .reduce((sum, t) => sum + t.amount, 0);
+
+            const totalHormiga = transactions
+                .filter(t => t.type === 'EXPENSE' && t.isHormiga)
+                .reduce((sum, t) => sum + t.amount, 0);
+
+            const totalFixedExpense = totalExpense - totalHormiga;
+            const availableCash = Math.max(0, totalIncome - totalExpense - savingsGoal.saved);
+            const potentialSavings = Math.max(0, (totalIncome - totalFixedExpense) - savingsGoal.saved);
+
+            document.getElementById('display-total-income').innerText = formatCurrency(totalIncome);
+            document.getElementById('display-available-cash').innerText = formatCurrency(availableCash);
+            document.getElementById('display-hormiga-total').innerText = formatCurrency(totalHormiga);
+            document.getElementById('display-potential-savings').innerText = formatCurrency(potentialSavings);
+
+            // CALCULATE DAILY & WEEKLY SUGGESTED SPENDING CAPACITY
+            const weeklyCap = availableCash > 0 ? availableCash : 0;
+            const dailyCap = weeklyCap / 7;
+
+            document.getElementById('calc-daily-cap').innerText = `${formatCurrency(dailyCap)} / día`;
+            document.getElementById('calc-weekly-cap').innerText = `${formatCurrency(weeklyCap)} / sem`;
+            document.getElementById('calc-fixed-expenses').innerText = formatCurrency(totalFixedExpense);
+        }
+
+        function recalculateLimits() {
+            const totalIncome = transactions
+                .filter(t => t.type === 'INCOME')
+                .reduce((sum, t) => sum + t.amount, 0);
+
+            const totalHormiga = transactions
+                .filter(t => t.type === 'EXPENSE' && t.isHormiga)
+                .reduce((sum, t) => sum + t.amount, 0);
+
+            const ratio = parseFloat(document.getElementById('hormiga-ratio').value);
+            const maxAllowedHormiga = totalIncome * ratio;
+
+            document.getElementById('hormiga-gauge-label').innerText = `Gastado en Hormiga: ${formatCurrency(totalHormiga)}`;
+            document.getElementById('hormiga-gauge-max').innerText = `Límite Permitido (${(ratio * 100)}%): ${formatCurrency(maxAllowedHormiga)}`;
+
+            const progressBar = document.getElementById('hormiga-progress-bar');
+            let percentage = 0;
+            if (maxAllowedHormiga > 0) {
+                percentage = Math.min(100, (totalHormiga / maxAllowedHormiga) * 100);
+            } else if (totalHormiga > 0) {
+                percentage = 100;
+            }
+            progressBar.style.width = `${percentage}%`;
+
+            const alertBox = document.getElementById('hormiga-alert-box');
+            const alertIcon = document.getElementById('alert-icon');
+            const alertText = document.getElementById('alert-text');
+            const alertBadge = document.getElementById('alert-diff-badge');
+
+            if (totalIncome === 0) {
+                alertBox.className = "p-3.5 rounded-xl border border-slate-800 bg-marine-900/80 text-xs flex items-center justify-between gap-3";
+                alertIcon.className = "fa-solid fa-circle-info text-cyan-400 text-base";
+                alertText.innerText = "Ingresa tus ingresos para que el sistema calcule automáticamente tu límite máximo de gastos hormiga.";
+                alertBadge.className = "font-orbitron font-bold text-cyan-400 text-xs whitespace-nowrap";
+                alertBadge.innerText = "SISTEMA LISTO";
+            } else if (totalHormiga > maxAllowedHormiga) {
+                const excess = totalHormiga - maxAllowedHormiga;
+                alertBox.className = "p-3.5 rounded-xl border border-rose-500/50 bg-rose-950/60 text-xs flex items-center justify-between gap-3 text-rose-200 glow-magenta";
+                alertIcon.className = "fa-solid fa-triangle-exclamation text-neon-pink text-base";
+                alertText.innerHTML = `<strong>¡Alerta de Fuga!</strong> Te has excedido por <strong class="text-white">${formatCurrency(excess)}</strong> del límite recomendado. Estás restando este dinero a tu ahorro.`;
+                alertBadge.className = "font-orbitron font-bold text-neon-pink text-xs whitespace-nowrap";
+                alertBadge.innerText = `EXCESO +${formatCurrency(excess)}`;
+            } else {
+                const remaining = maxAllowedHormiga - totalHormiga;
+                alertBox.className = "p-3.5 rounded-xl border border-emerald-500/40 bg-emerald-950/40 text-xs flex items-center justify-between gap-3 text-emerald-200";
+                alertIcon.className = "fa-solid fa-shield-halved text-neon-teal text-base";
+                alertText.innerHTML = `<strong>¡Excelente Control!</strong> Tus antojos están dentro del presupuesto. Te quedan <strong class="text-white">${formatCurrency(remaining)}</strong> disponibles de tu límite.`;
+                alertBadge.className = "font-orbitron font-bold text-neon-teal text-xs whitespace-nowrap";
+                alertBadge.innerText = `DISPONIBLE ${formatCurrency(remaining)}`;
+            }
+        }
+
+        function renderGoal() {
+            document.getElementById('goal-name-display').innerText = savingsGoal.name || 'Sin Meta Configurada';
+            document.getElementById('goal-target-display').innerText = formatCurrency(savingsGoal.target || 0);
+            document.getElementById('goal-saved-display').innerText = formatCurrency(savingsGoal.saved || 0);
+
+            let percent = 0;
+            if (savingsGoal.target > 0) {
+                percent = Math.min(100, Math.round((savingsGoal.saved / savingsGoal.target) * 100));
+            }
+
+            document.getElementById('goal-percentage-display').innerText = `${percent}%`;
+            document.getElementById('goal-progress-bar').style.width = `${percent}%`;
+
+            const totalIncome = transactions.filter(t => t.type === 'INCOME').reduce((s,t) => s + t.amount, 0);
+            const totalExpense = transactions.filter(t => t.type === 'EXPENSE').reduce((s,t) => s + t.amount, 0);
+            const weeklyFreeCash = Math.max(0, totalIncome - totalExpense);
+
+            const remainingGoal = Math.max(0, savingsGoal.target - savingsGoal.saved);
+            const projectionText = document.getElementById('goal-time-text');
+
+            if (remainingGoal === 0 && savingsGoal.target > 0) {
+                projectionText.innerText = "¡Meta Alcanzada! 🎉";
+                projectionText.className = "font-bold text-neon-teal font-orbitron";
+            } else if (weeklyFreeCash > 0 && remainingGoal > 0) {
+                const weeksNeeded = Math.ceil(remainingGoal / weeklyFreeCash);
+                projectionText.innerText = `Aproximadamente ${weeksNeeded} semana(s)`;
+                projectionText.className = "font-bold text-white font-orbitron";
+            } else {
+                projectionText.innerText = "Registra ingresos libres";
+                projectionText.className = "font-medium text-slate-400";
+            }
+        }
+
+        function renderTransactionsList() {
+            const container = document.getElementById('transactions-list');
+            container.innerHTML = '';
+
+            let filtered = transactions;
+            if (currentFilter === 'INCOME') filtered = transactions.filter(t => t.type === 'INCOME');
+            if (currentFilter === 'EXPENSE') filtered = transactions.filter(t => t.type === 'EXPENSE');
+            if (currentFilter === 'HORMIGA') filtered = transactions.filter(t => t.type === 'EXPENSE' && t.isHormiga);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-slate-500">
+                        <i class="fa-solid fa-ghost text-3xl mb-2 text-slate-600"></i>
+                        <p class="text-xs">No hay movimientos registrados en esta vista.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(item => {
+                const isIncome = item.type === 'INCOME';
+                const el = document.createElement('div');
+                
+                el.className = `p-3 rounded-xl border flex flex-wrap justify-between items-center gap-3 transition ${
+                    isIncome 
+                        ? 'bg-marine-900/60 border-emerald-500/30 hover:border-emerald-400' 
+                        : item.isHormiga 
+                            ? 'bg-pink-950/30 border-pink-500/40 hover:border-pink-400' 
+                            : 'bg-marine-900/60 border-slate-800 hover:border-slate-700'
+                }`;
+
+                el.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2.5 rounded-xl ${isIncome ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-500/30' : item.isHormiga ? 'bg-pink-950/80 text-neon-magenta border border-pink-500/40' : 'bg-marine-950 text-slate-400 border border-slate-800'}">
+                            <i class="fa-solid ${isIncome ? 'fa-arrow-down-left' : item.isHormiga ? 'fa-bug' : 'fa-receipt'} text-base"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-sm text-white">${escapeHtml(item.concept)}</span>
+                                ${item.isHormiga ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-950 text-neon-magenta border border-pink-500/40">Gasto Hormiga 🐜</span>` : ''}
+                            </div>
+                            <p class="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
+                                <span><i class="fa-regular fa-folder mr-1"></i>${escapeHtml(item.category)}</span>
+                                <span>•</span>
+                                <span><i class="fa-regular fa-calendar mr-1"></i>${item.date}</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <span class="font-orbitron font-bold text-base ${isIncome ? 'text-emerald-400' : 'text-rose-400'}">
+                            ${isIncome ? '+' : '-'}${formatCurrency(item.amount)}
+                        </span>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="editTransaction('${item.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-neon-cyan hover:bg-marine-950 transition" title="Editar">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="deleteTransaction('${item.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-marine-950 transition" title="Eliminar">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(el);
+            });
+        }
+
+        function openModal(type) {
+            document.getElementById('transaction-form').reset();
+            document.getElementById('trans-id').value = '';
+            document.getElementById('trans-type').value = type;
+            document.getElementById('trans-date').valueAsDate = new Date();
+
+            const isIncome = type === 'INCOME';
+            const titleEl = document.getElementById('modal-title');
+            const iconEl = document.getElementById('modal-title-icon');
+            const categorySelect = document.getElementById('trans-category');
+            const hormigaContainer = document.getElementById('hormiga-toggle-container');
+
+            categorySelect.innerHTML = '';
+            const options = isIncome ? CATEGORIES.INCOME : CATEGORIES.EXPENSE;
+            options.forEach(cat => {
+                categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+            });
+
+            if (isIncome) {
+                titleEl.innerHTML = `<span>Registrar Ingreso</span>`;
+                iconEl.className = "fa-solid fa-circle-plus text-emerald-400";
+                hormigaContainer.classList.add('hidden');
+            } else {
+                titleEl.innerHTML = `<span>Registrar Gasto</span>`;
+                iconEl.className = "fa-solid fa-circle-minus text-rose-400";
+                hormigaContainer.classList.remove('hidden');
+            }
+
+            const modal = document.getElementById('transaction-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('transaction-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('trans-id').value;
+            const type = document.getElementById('trans-type').value;
+            const amount = parseFloat(document.getElementById('trans-amount').value);
+            const concept = document.getElementById('trans-concept').value.trim();
+            const category = document.getElementById('trans-category').value;
+            const date = document.getElementById('trans-date').value;
+            const isHormiga = type === 'EXPENSE' ? document.getElementById('trans-is-hormiga').checked : false;
+
+            if (id) {
+                const idx = transactions.findIndex(t => t.id === id);
+                if (idx !== -1) {
+                    transactions[idx] = { id, type, amount, concept, category, date, isHormiga };
+                }
+            } else {
+                const newTrans = {
+                    id: 'tr_' + Date.now(),
+                    type,
+                    amount,
+                    concept,
+                    category,
+                    date,
+                    isHormiga
+                };
+                transactions.push(newTrans);
+            }
+
+            saveToStorage();
+            renderAll();
+            closeModal();
+        }
+
+        function editTransaction(id) {
+            const item = transactions.find(t => t.id === id);
+            if (!item) return;
+
+            openModal(item.type);
+            document.getElementById('trans-id').value = item.id;
+            document.getElementById('trans-amount').value = item.amount;
+            document.getElementById('trans-concept').value = item.concept;
+            document.getElementById('trans-category').value = item.category;
+            document.getElementById('trans-date').value = item.date;
+            if (item.type === 'EXPENSE') {
+                document.getElementById('trans-is-hormiga').checked = item.isHormiga;
+            }
+        }
+
+        function deleteTransaction(id) {
+            if (confirm('¿Deseas eliminar este registro transaccional?')) {
+                transactions = transactions.filter(t => t.id !== id);
+                saveToStorage();
+                renderAll();
+            }
+        }
+
+        function openGoalModal() {
+            document.getElementById('goal-name-input').value = savingsGoal.name || '';
+            document.getElementById('goal-target-input').value = savingsGoal.target || '';
+            document.getElementById('goal-saved-input').value = savingsGoal.saved || '';
+
+            const modal = document.getElementById('goal-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeGoalModal() {
+            const modal = document.getElementById('goal-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function handleGoalSubmit(e) {
+            e.preventDefault();
+            savingsGoal = {
+                name: document.getElementById('goal-name-input').value.trim(),
+                target: parseFloat(document.getElementById('goal-target-input').value) || 0,
+                saved: parseFloat(document.getElementById('goal-saved-input').value) || 0
+            };
+
+            saveToStorage();
+            renderAll();
+            closeGoalModal();
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            ['ALL', 'INCOME', 'EXPENSE', 'HORMIGA'].forEach(f => {
+                const btn = document.getElementById(`filter-btn-${f}`);
+                if (f === filter) {
+                    btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-neon-cyan text-slate-950";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-marine-800 text-slate-300 hover:text-white";
+                }
+            });
+            renderTransactionsList();
+        }
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN'
+            }).format(num || 0);
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
+    </script>
+</body>
+</html>
